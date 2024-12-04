@@ -75,7 +75,7 @@ runConsumer()
 
 async function getRedisClient() {
   if (!redisClient.isOpen) {
-    await redisClient.connect(); // Asegúrate de que la conexión esté abierta
+    await redisClient.connect(); 
   }
   return redisClient; 
 }
