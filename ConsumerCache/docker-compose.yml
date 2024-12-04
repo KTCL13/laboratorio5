@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  app:
+    build: .
+    container_name: my-app
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - KAFKA_BROKER=kafka:9092
+    ports:
+      - "7700:7700"
+    networks:
+      - app-network
+    command: ["node", "consumer.js"] 
+
+networks:
+  app-network:
+    external: true

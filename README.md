@@ -21,6 +21,7 @@ List the topics:
 See messages:
 
     kafka-console-consumer --bootstrap-server localhost:9092 --topic user-location-updates -from-beginning
+        kafka-console-consumer --bootstrap-server localhost:9092 --topic movies -from-beginning
 
 Add message 
 

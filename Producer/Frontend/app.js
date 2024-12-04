@@ -1,3 +1,5 @@
+const serverAddres="192.168.1.5:3000"
+
 const app = Vue.createApp({
     data() {
       return {
@@ -32,6 +34,7 @@ const app = Vue.createApp({
       async submitForm() {
         const eventData = {
           movie: this.selectedMovie.title,
+          movieImage: this.selectedMovie.image,
           user: {
             name: this.form.name,
             age: this.form.age,
@@ -41,7 +44,7 @@ const app = Vue.createApp({
         };
       
         try {
-          const response = await fetch("http://localhost:3000", {
+          const response = await fetch("http://"+serverAddres+"/movies", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
