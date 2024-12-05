@@ -1,29 +1,57 @@
-const { Kafka } = require("kafkajs")
+const { Kafka } = require("kafkajs");
+const nodemailer = require("nodemailer");
 
 const kafka = new Kafka({
-  clientId: "my-app",
-  brokers: ["localhost:29092"],
-})
+  clientId: "email-service",
+  brokers: ["kafka:9092"],
+});
 
-const consumer = kafka.consumer({ groupId: 'test-group' })
+const consumer = kafka.consumer({ groupId: "email-group" });
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "pruebaspara991@gmail.com",
+    pass: "CONTRASEÑA AQUI",
+  },
+});
+
+async function sendEmail(to, subject, text) {
+  try {
+    await transporter.sendMail({
+      from: '"Movie Service" <pruebaspara991@gmail.com>',
+      to,
+      subject,
+      text,
+    });
+    console.log(`Correo enviado a ${to}`);
+  } catch (error) {
+    console.error("Error al enviar el correo:", error);
+  }
+}
 
 const runConsumer = async () => {
-
-  await consumer.connect()
-  await consumer.subscribe({ topic: 'user-location-updates', fromBeginning: true })
+  await consumer.connect();
+  await consumer.subscribe({ topic: "movies", fromBeginning: false });
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log("test")
-      console.log({ value: message.value.toString()})
+      const content = JSON.parse(message.value.toString());
+
+      const email = content.email;
+      const age = parseInt(content.age, 10);
+
+      console.log(`Procesando mensaje: ${email}, ${age}`);
+
+      if (age < 18) {
+        const subject = "Acceso restringido por edad";
+        const body = `Hola, hemos recibido tus datos, pero no puedes acceder al contenido debido a que tienes ${age} años.`;
+        await sendEmail(email, subject, body);
+      }
     },
-  })
-}
+  });
+};
 
 runConsumer()
-  .then(() => {
-    console.log('Producer is running...');
-  })
-  .catch((error) => {
-    console.error('Failed to run kafka consumer', error);
-  });
+  .then(() => console.log("Servicio de correo iniciado..."))
+  .catch((error) => console.error("Error al iniciar el consumidor Kafka:", error));
