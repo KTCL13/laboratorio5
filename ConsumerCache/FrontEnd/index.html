@@ -17,8 +17,8 @@
       <section class="top-shows">
         <h2>Películas Más Vistas</h2>
         <div class="movies-list">
-          <div v-for="show in topShows" :key="show.movie" class="movie-item">
-            <!-- Imagen de la película -->x
+          <div v-for="(show, index)  in topShows" :key="show.movie" class="movie-item">
+            {{ index + 1 }}
             <img :src="show.image" :alt="show.movie" class="movie-image">
             <!-- Nombre de la película -->
             <h3 class="movie-name">{{ show.movie }}</h3>

@@ -1,4 +1,4 @@
-const serverAddres="192.168.1.5:3000"
+const serverAddres="localhost:3000"
 
 const app = Vue.createApp({
     data() {

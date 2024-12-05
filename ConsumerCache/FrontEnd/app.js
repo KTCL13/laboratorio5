@@ -7,7 +7,7 @@ const app = Vue.createApp({
     },
     mounted() {
       // Conectar con el servidor Socket.IO
-      this.socket = io("http://192.168.1.5:7700");
+      this.socket = io("http://localhost:7700");
   
       // Escuchar actualizaciones del top 10 de shows
       this.socket.on("updateTopShows", (data) => {

@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "pruebaspara991@gmail.com",
-    pass: "CONTRASEÑA AQUI",
+    pass: "parapruebas_619",
   },
 });
 
@@ -38,8 +38,8 @@ const runConsumer = async () => {
     eachMessage: async ({ topic, partition, message }) => {
       const content = JSON.parse(message.value.toString());
 
-      const email = content.email;
-      const age = parseInt(content.age, 10);
+      const email = content.user.parentEmail;
+      const age = parseInt(content.user.age, 10);
 
       console.log(`Procesando mensaje: ${email}, ${age}`);
 

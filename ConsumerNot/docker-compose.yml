@@ -4,8 +4,6 @@ services:
   app:
     build: .
     container_name: email-service
-    depends_on:
-      - kafka
     environment:
       - KAFKA_BROKER=kafka:9092
       - NODE_ENV=production
