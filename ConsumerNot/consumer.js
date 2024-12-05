@@ -1,6 +1,7 @@
 const { Kafka } = require("kafkajs");
 const nodemailer = require("nodemailer");
 
+// Configuración de Kafka
 const kafka = new Kafka({
   clientId: "email-service",
   brokers: ["kafka:9092"],
@@ -8,28 +9,33 @@ const kafka = new Kafka({
 
 const consumer = kafka.consumer({ groupId: "email-group" });
 
+// Configuración del transportador de Nodemailer
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "pruebaspara991@gmail.com",
-    pass: "parapruebas_619",
+    user: "pruebaspara991@gmail.com", // Correo del remitente
+    pass: "sivy vtoq tguz snac", // Contraseña de aplicación de Gmail
   },
 });
 
+// Función para enviar correo
 async function sendEmail(to, subject, text) {
   try {
-    await transporter.sendMail({
+    const mailOptions = {
       from: '"Movie Service" <pruebaspara991@gmail.com>',
       to,
       subject,
       text,
-    });
+    };
+
+    await transporter.sendMail(mailOptions);
     console.log(`Correo enviado a ${to}`);
   } catch (error) {
     console.error("Error al enviar el correo:", error);
   }
 }
 
+// Consumidor de Kafka
 const runConsumer = async () => {
   await consumer.connect();
   await consumer.subscribe({ topic: "movies", fromBeginning: false });
@@ -52,6 +58,7 @@ const runConsumer = async () => {
   });
 };
 
+// Iniciar el consumidor
 runConsumer()
   .then(() => console.log("Servicio de correo iniciado..."))
   .catch((error) => console.error("Error al iniciar el consumidor Kafka:", error));
