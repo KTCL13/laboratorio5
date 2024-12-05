@@ -1,27 +1,19 @@
 version: '3.8'
 
 services:
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6379:6379"
-    networks:
-      - app-network
-
   app:
     build: .
-    container_name: my-app
+    container_name: email-service
     depends_on:
-      - redis
+      - kafka
     environment:
-      - REDIS_HOST=redis
       - KAFKA_BROKER=kafka:9092
+      - NODE_ENV=production
     ports:
-      - "7700:7700"
+      - "8800:8800" # Cambia este puerto si necesitas
     networks:
       - app-network
-    command: ["node", "consumer.js"] 
+    command: ["node", "consumer.js"]
 
 networks:
   app-network:
